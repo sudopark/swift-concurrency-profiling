@@ -60,26 +60,26 @@ class ViewController: UIViewController {
             let asyncResult = await size.asyncSum()
             self.appendLog("result with await: \(asyncResult)")
             
-            let resultWithCont = await withCheckedContinuation { cont in
-                let result = size.sum()
-                cont.resume(returning: result)
-            }
-            self.appendLog("result with continuation await: \(resultWithCont)")
-            
-            let resultByCallAsyncHeavyWork = await self.callAsycnHeavyWork(size)
-            self.appendLog("resultByCallAsyncHeavyWork: \(resultByCallAsyncHeavyWork)")
-            
-            let resultByCallDoHeavyWork = await self.doAsyncHeavyWork(size)
-            self.appendLog("resultByCallDoHeavyWork: \(resultByCallDoHeavyWork)")
-            
-            let resultByNormalObject = self.normalWorker.makeInt()
-            self.appendLog("resultByNormalObject: \(resultByNormalObject)")
-            
-            let resultByActorIsolation = await self.heavyWorkActor.makeInt()
-            self.appendLog("resultByActorIsolation: \(resultByActorIsolation)")
-            
-            let resultByActorNonIsolatoin = self.heavyWorkActor.makeIntWithoutIsolation()
-            self.appendLog("resultByActorNonIsolatoin: \(resultByActorNonIsolatoin)")
+//            let resultWithCont = await withCheckedContinuation { cont in
+//                let result = size.sum()
+//                cont.resume(returning: result)
+//            }
+//            self.appendLog("result with continuation await: \(resultWithCont)")
+//            
+//            let resultByCallAsyncHeavyWork = await self.callAsycnHeavyWork(size)
+//            self.appendLog("resultByCallAsyncHeavyWork: \(resultByCallAsyncHeavyWork)")
+//            
+//            let resultByCallDoHeavyWork = await self.doAsyncHeavyWork(size)
+//            self.appendLog("resultByCallDoHeavyWork: \(resultByCallDoHeavyWork)")
+//            
+//            let resultByNormalObject = self.normalWorker.makeInt()
+//            self.appendLog("resultByNormalObject: \(resultByNormalObject)")
+//            
+//            let resultByActorIsolation = await self.heavyWorkActor.makeInt()
+//            self.appendLog("resultByActorIsolation: \(resultByActorIsolation)")
+//            
+//            let resultByActorNonIsolatoin = self.heavyWorkActor.makeIntWithoutIsolation()
+//            self.appendLog("resultByActorNonIsolatoin: \(resultByActorNonIsolatoin)")
             
             self.appendLog("end")
         }
