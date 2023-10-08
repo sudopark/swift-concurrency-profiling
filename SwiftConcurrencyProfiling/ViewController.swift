@@ -53,12 +53,12 @@ class ViewController: UIViewController {
     
     private func runTaskTest() {
         let size = Constant.size
-        Task {
+        Task.detached {
             let syncResult = size.sum()
-            self.appendLog("result without await: \(syncResult)")
+            await self.appendLog("result without await: \(syncResult)")
             
             let asyncResult = await size.asyncSum()
-            self.appendLog("result with await: \(asyncResult)")
+            await self.appendLog("result with await: \(asyncResult)")
             
 //            let resultWithCont = await withCheckedContinuation { cont in
 //                let result = size.sum()
@@ -81,7 +81,7 @@ class ViewController: UIViewController {
 //            let resultByActorNonIsolatoin = self.heavyWorkActor.makeIntWithoutIsolation()
 //            self.appendLog("resultByActorNonIsolatoin: \(resultByActorNonIsolatoin)")
             
-            self.appendLog("end")
+            await self.appendLog("end")
         }
     }
     
