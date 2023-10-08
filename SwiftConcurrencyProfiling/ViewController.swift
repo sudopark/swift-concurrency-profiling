@@ -53,19 +53,29 @@ class ViewController: UIViewController {
     
     private func runTaskTest() {
         let size = Constant.size
-        Task.detached {
-            let syncResult = size.sum()
-            await self.appendLog("result without await: \(syncResult)")
+        Task {
+//             suspendion point 없음 -> 메인스레드 행
+//            let syncResult = size.sum()
+//            self.appendLog("result without await: \(syncResult)")
+//
+//             suspension point 만남 + main actor -> context switching 발생
+//             다른 스레드에서 결과 돌아가고 재시작될때 메인스레드로 다시 돌아옴
+//            let asyncResult = await size.asyncSum()
+//            self.appendLog("result with await: \(asyncResult)")
             
-            let asyncResult = await size.asyncSum()
-            await self.appendLog("result with await: \(asyncResult)")
+//            일단 suspension point 만났기에 context switching + await가 끝나면 다시 메인스레드로 돌아옴
+            let resultWithCont = await size.sumWithContinuation()
+            self.appendLog("result with continuation await: \(resultWithCont)")
             
-//            let resultWithCont = await withCheckedContinuation { cont in
-//                let result = size.sum()
-//                cont.resume(returning: result)
-//            }
-//            self.appendLog("result with continuation await: \(resultWithCont)")
-//            
+            // await만 봤을때는 위의 상황과 동일하지만 withCheckedContinuation의 틍성에 의해 현재 task -> 결과적으로 main thread가 행걸림
+            // The body of the closure executes synchronously on the calling task, and once it returns the calling task is suspended.
+            let resultWithCont2 = await withCheckedContinuation { cont in
+                print("thread inside: \(Thread.current)")
+                let result = size.sum()
+                cont.resume(returning: result)
+            }
+            self.appendLog("result with continuation await: \(resultWithCont2)")
+            
 //            let resultByCallAsyncHeavyWork = await self.callAsycnHeavyWork(size)
 //            self.appendLog("resultByCallAsyncHeavyWork: \(resultByCallAsyncHeavyWork)")
 //            
@@ -81,7 +91,7 @@ class ViewController: UIViewController {
 //            let resultByActorNonIsolatoin = self.heavyWorkActor.makeIntWithoutIsolation()
 //            self.appendLog("resultByActorNonIsolatoin: \(resultByActorNonIsolatoin)")
             
-            await self.appendLog("end")
+            self.appendLog("end")
         }
     }
     
@@ -103,5 +113,13 @@ extension Int {
     
     func asyncSum() async -> Int {
         return (0..<self).reduce(0, +)
+    }
+    
+    func sumWithContinuation() async -> Int {
+        return await withCheckedContinuation { cont in
+            print("thraed inside: \(Thread.current)")
+            let result = (0..<self).reduce(0, +)
+            cont.resume(returning: result)
+        }
     }
 }
