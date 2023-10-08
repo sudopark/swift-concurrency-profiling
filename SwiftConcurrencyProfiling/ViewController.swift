@@ -76,38 +76,39 @@ class ViewController: UIViewController {
 ////            }
 ////            self.appendLog("result with continuation await: \(resultWithCont2)")
 //            
-            // 1번
-            // 여기서의 await는 suspension point로 동작 안함 -> task의 sync한 실행구문으로 인식하고 main thread에서 돌림
-            // -> syncResult = size.sum()와 같은 결과
-            let resultByCallDoHeavyWork = await self.doAsyncHeavyWork(size)
-            self.appendLog("resultByCallDoHeavyWork: \(resultByCallDoHeavyWork)")
-            
-            // 2번
-            // 차이점은 callAsycnHeavyWork 내부에서 한번 더 await
-            // doAsyncHeavyWork, callAsycnHeavyWork 인터페이스만 보았을때는 차이점이 없음 왜?
-            let resultByCallAsyncHeavyWork = await self.callAsycnHeavyWork(size)
-            self.appendLog("resultByCallAsyncHeavyWork: \(resultByCallAsyncHeavyWork)")
-            
-            // 3번
-            // 결과는 1번과 동일, 2번과 비슷한 구조이지만 왜?
-            let resultByCallFakeAsyncHeavyWork = await self.callFakeAsyncHeavyWork(size)
-            self.appendLog("resultByCallFakeAsyncHeavyWork: \(resultByCallFakeAsyncHeavyWork)")
-            
-            // 4번
-            // 결과는 3, 4번 둘다 suspension point라 인식 x -> 하나의 동기 구문으로 인식
-            // 3번과 다른점은 self(main actor)의 fake async 함수를 호출하는 것이 아니라 int의 ayns 함수를 호출
-            // 2번과 다른점은 callFakeAsyncHeavyWork2 내부에 연산로직이 있다는점
-            let resultByCallFakeAsyncHeavyWork2 = await self.callFakeAsyncHeavyWork2(size)
-            self.appendLog("resultByCallFakeAsyncHeavyWork2: \(resultByCallFakeAsyncHeavyWork2)")
+//            // 1번
+//            // 여기서의 await는 suspension point로 동작 안함 -> task의 sync한 실행구문으로 인식하고 main thread에서 돌림
+//            // -> syncResult = size.sum()와 같은 결과
+//            let resultByCallDoHeavyWork = await self.doAsyncHeavyWork(size)
+//            self.appendLog("resultByCallDoHeavyWork: \(resultByCallDoHeavyWork)")
+//            
+//            // 2번
+//            // 차이점은 callAsycnHeavyWork 내부에서 한번 더 await
+//            // doAsyncHeavyWork, callAsycnHeavyWork 인터페이스만 보았을때는 차이점이 없음 왜?
+//            let resultByCallAsyncHeavyWork = await self.callAsycnHeavyWork(size)
+//            self.appendLog("resultByCallAsyncHeavyWork: \(resultByCallAsyncHeavyWork)")
+//            
+//            // 3번
+//            // 결과는 1번과 동일, 2번과 비슷한 구조이지만 왜?
+//            let resultByCallFakeAsyncHeavyWork = await self.callFakeAsyncHeavyWork(size)
+//            self.appendLog("resultByCallFakeAsyncHeavyWork: \(resultByCallFakeAsyncHeavyWork)")
+//            
+//            // 4번
+//            // 결과는 3, 4번 둘다 suspension point라 인식 x -> 하나의 동기 구문으로 인식
+//            // 3번과 다른점은 self(main actor)의 fake async 함수를 호출하는 것이 아니라 int의 ayns 함수를 호출
+//            // 2번과 다른점은 callFakeAsyncHeavyWork2 내부에 연산로직이 있다는점
+//            let resultByCallFakeAsyncHeavyWork2 = await self.callFakeAsyncHeavyWork2(size)
+//            self.appendLog("resultByCallFakeAsyncHeavyWork2: \(resultByCallFakeAsyncHeavyWork2)")
 
-//            let resultByNormalObject = self.normalWorker.makeInt()
-//            self.appendLog("resultByNormalObject: \(resultByNormalObject)")
-//            
-//            let resultByActorIsolation = await self.heavyWorkActor.makeInt()
-//            self.appendLog("resultByActorIsolation: \(resultByActorIsolation)")
-//            
-//            let resultByActorNonIsolatoin = self.heavyWorkActor.makeIntWithoutIsolation()
-//            self.appendLog("resultByActorNonIsolatoin: \(resultByActorNonIsolatoin)")
+            
+            let resultByNormalObject = self.normalWorker.makeInt()
+            self.appendLog("resultByNormalObject: \(resultByNormalObject)")
+            
+            let resultByActorIsolation = await self.heavyWorkActor.makeInt()
+            self.appendLog("resultByActorIsolation: \(resultByActorIsolation)")
+            
+            let resultByActorNonIsolatoin = self.heavyWorkActor.makeIntWithoutIsolation()
+            self.appendLog("resultByActorNonIsolatoin: \(resultByActorNonIsolatoin)")
             
             self.appendLog("end")
         }
